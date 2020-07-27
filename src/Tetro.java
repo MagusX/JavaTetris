@@ -84,11 +84,11 @@ public class Tetro {
         collide = collidedEdge();
     }
 
-    public void saveTetro() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-
-            }
-        }
-    }
+//    public void saveTetro() {
+//        for (int i = 0; i < size; i++) {
+//            for (int j = 0; j < size; j++) {
+//
+//            }
+//        }
+//    }
 }
