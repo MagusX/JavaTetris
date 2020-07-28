@@ -71,18 +71,20 @@ public class Tetro {
 
     public int collidedRight() {
         int posX = pos.getX();
+        int maxRight = 0;
         for (int i = 0; i < size; i++) {
-            for (int j = size - 1; j >= 1; j--) {
-                if (body[i][j] != 0) {
-                    if (posX + j > Board.rightEdge) {
-                        moveLeft();
-                        return 1;
-                    }
-                    if (posX + j == Board.rightEdge)
-                        return 1;
-                }
+            for (int j = 1; j < size; j++) {
+                if (body[i][j] != 0 && j > maxRight)
+                    maxRight = j;
             }
         }
+        int right = posX + maxRight;
+        if (right > Board.rightEdge) {
+            moveLeft();
+            return 1;
+        }
+        if (right == Board.rightEdge)
+            return 1;
         return 2;
     }
 
@@ -97,9 +99,9 @@ public class Tetro {
     }
 
     public void detectCollision() {
-        //int left = collidedLeft();
-        //collideSide = (left == 2) ? right : left;
-        collideSide = collidedRight();
+        int posX = pos.getX();
+        if (posX < 2) collideSide = collidedLeft();
+        else if (posX + size > 7) collideSide = collidedRight();
         collideBottom = collidedBottom();
     }
 

@@ -5,7 +5,7 @@ public class Graphic extends PApplet {
     public static PApplet proc;
     private static Board board;
     private static char pressedKey;
-    private Tetro tetro = new ZShape();
+    private Tetro tetro = new StickShape();
 
     public void run() {
         PApplet.main("Graphic");
