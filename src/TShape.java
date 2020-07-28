@@ -1,6 +1,7 @@
 public class TShape extends Tetro {
     public TShape() {
-        body = new int[][]{{0,1,0},{1,1,1},{0,0,0}};
+        id = 6;
+        body = new int[][]{{0,6,0},{6,6,6},{0,0,0}};
         color = new Color(153,0,254);
     }
 }

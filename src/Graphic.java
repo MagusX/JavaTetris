@@ -5,7 +5,7 @@ public class Graphic extends PApplet {
     public static PApplet proc;
     private static Board board;
     private static char pressedKey;
-    private Tetro tetro = new JShape();
+    private Tetro tetro = new ZShape();
 
     public void run() {
         PApplet.main("Graphic");
@@ -19,11 +19,13 @@ public class Graphic extends PApplet {
         proc = this;
         frameRate(60);
         board = new Board();
+        //generateTetro();
     }
 
     private void refresh() {
         background(20);
         board.drawBorder();
+        board.drawSavedTetros();
     }
 
     public void keyReleased() {
@@ -38,7 +40,7 @@ public class Graphic extends PApplet {
 
     private void keyBoardCtrl() {
         tetro.detectCollision();
-        if (keyPressed && tetro.collide != 0) {
+        if (keyPressed && tetro.collideBottom != 0) {
             if (key == 'w') pressedKey = 'w';
             else if (key == 'a') pressedKey = 'a';
             else if (key == 'd') pressedKey = 'd';
@@ -74,12 +76,26 @@ public class Graphic extends PApplet {
         }
     }
 
+    private void getBoard() {
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 10; j++) {
+                System.out.print(Board.grid[i][j] + " ");
+            }
+            System.out.print("\n");
+        }
+        System.out.println("--");
+
+    }
+
     public void draw() {
-        if (tetro.collide == 0)
+        if (tetro.collideBottom == 0) {
+            tetro.saveTetro();
             generateTetro();
+        }
         keyBoardCtrl();
         tetro.drawShape();
         if (frameCount % 60 == 0) {
+            getBoard();
             refresh();
             tetro.fall();
         }

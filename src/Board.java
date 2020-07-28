@@ -8,13 +8,10 @@ public class Board {
     private static int size = row * col;
     public static int width = sqrSize * col;
     public static int height = sqrSize * row;
-    private static int[][] grid = new int[size][size];
+    public static int[][] grid = new int[size][size];
     public static int rightEdge = col - 1;
     public static int bottomEdge = row - 1;
-
-    public int[][] grid() {
-        return grid;
-    }
+    public static int highestTetroPos = row;
 
     public Board() {
         for (int i = 0; i < row; i++) {
@@ -45,5 +42,53 @@ public class Board {
         Graphic.proc.stroke(253,255,24);
         Graphic.proc.line(x, 0, x, height);
         Graphic.proc.line(x + width, 0, x + width, height);
+    }
+
+
+    private Color idToColor(int id) {
+        Color color;
+        switch (id) {
+            case 1:
+                color = new Color(3,255,253);
+                break;
+            case 2:
+                color = new Color(255,170,0);
+                break;
+            case 3:
+                color = new Color(0,0,255);
+                break;
+            case 4:
+                color = new Color(248,229,1);
+                break;
+            case 5:
+                color = new Color(1,255,1);
+                break;
+            case 6:
+                color = new Color(153,0,254);
+                break;
+            case 7:
+                color = new Color(255,1,0);
+                break;
+            default:
+                color = new Color(255, 255, 255);
+                break;
+        }
+        return color;
+    }
+
+    public void drawSavedTetros() {
+        PairVal pixel;
+        Graphic.proc.stroke(190,190,190);
+
+        for (int i = highestTetroPos; i <= bottomEdge; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] != 0) {
+                    Color color = idToColor(grid[i][j]);
+                    pixel = gridToPix(new PairVal(j, i));
+                    Graphic.proc.fill(color.r, color.g, color.b);
+                    Graphic.proc.rect(pixel.getX(), pixel.getY(), sqrSize, sqrSize);
+                }
+            }
+        }
     }
 }

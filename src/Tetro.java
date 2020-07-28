@@ -4,20 +4,22 @@ public class Tetro {
     protected PairVal grid;
     protected Color color;
     protected int size = 3;
-    public int collide = 2;
+    protected int id = 0;
+    public int collideSide = 2;
+    public int collideBottom = 2;
 
     public void fall() {
-        if (collide != 0)
+        if (collideBottom == 2)
             pos.setY(pos.getY() + 1);
     }
 
     public void moveLeft() {
-        if (collide != 0 && collide != -1)
+        if (collideBottom == 2 && collideSide != -1)
             pos.setX(pos.getX() - 1);
     }
 
     public void moveRight() {
-        if (collide != 0 && collide != 1)
+        if (collideBottom == 2 && collideSide != 1)
             pos.setX(pos.getX() + 1);
     }
 
@@ -49,9 +51,8 @@ public class Tetro {
     }
 
     //-1 left, 0 bottom, 1 right, 2 false
-    public int collidedEdge() {
+    public int collidedLeft() {
         int posX = pos.getX();
-
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (body[i][j] != 0) {
@@ -63,9 +64,14 @@ public class Tetro {
                         return -1;
                     }
                 }
-                if (body[i][j] != 0 && pos.getY() + i == Board.bottomEdge)
-                    return 0;
             }
+        }
+        return 2;
+    }
+
+    public int collidedRight() {
+        int posX = pos.getX();
+        for (int i = 0; i < size; i++) {
             for (int j = size - 1; j >= 1; j--) {
                 if (body[i][j] != 0) {
                     if (posX + j > Board.rightEdge) {
@@ -80,15 +86,33 @@ public class Tetro {
         return 2;
     }
 
-    public void detectCollision() {
-        collide = collidedEdge();
+    public int collidedBottom() {
+        for (int i = size - 1; i >= 0; i--) {
+            for (int j = 0; j < size; j++) {
+                if (body[i][j] != 0 && pos.getY() + i >= Board.bottomEdge)
+                    return 0;
+            }
+        }
+        return 2;
     }
 
-//    public void saveTetro() {
-//        for (int i = 0; i < size; i++) {
-//            for (int j = 0; j < size; j++) {
-//
-//            }
-//        }
-//    }
+    public void detectCollision() {
+        //int left = collidedLeft();
+        //collideSide = (left == 2) ? right : left;
+        collideSide = collidedRight();
+        collideBottom = collidedBottom();
+    }
+
+    public void saveTetro() {
+        int posY;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (body[i][j] != 0) {
+                    posY = pos.getY();
+                    Board.grid[posY + i][pos.getX() + j] = id;
+                    if (posY < Board.highestTetroPos) Board.highestTetroPos = posY;
+                }
+            }
+        }
+    }
 }

@@ -1,6 +1,7 @@
 public class StickShape extends Tetro {
     private static int status;
     public StickShape() {
+        id = 1;
         body = new int[][]{{0,0,0,0},{1,1,1,1},{0,0,0,0},{0,0,0,0}};
         status = 0;
         color = new Color(3,255,253);
