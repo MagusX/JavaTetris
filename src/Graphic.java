@@ -90,11 +90,12 @@ public class Graphic extends PApplet {
     public void draw() {
         if (tetro.collideBottom == 0) {
             tetro.saveTetro();
+            board.scoreRow();
             generateTetro();
         }
         keyBoardCtrl();
         tetro.drawShape();
-        if (frameCount % 120 == 0) {
+        if (frameCount % 60 == 0) {
             //getBoard();
             refresh();
             tetro.fall();

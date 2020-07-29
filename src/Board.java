@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Board {
     private static int x = 300;
@@ -88,6 +89,28 @@ public class Board {
                     Graphic.proc.fill(color.r, color.g, color.b);
                     Graphic.proc.rect(pixel.getX(), pixel.getY(), sqrSize, sqrSize);
                 }
+            }
+        }
+    }
+
+    private void deleteRow(int row) {
+        for (int i = row; i >= highestTetroPos; i--) {
+            grid[i] = grid[i - 1];
+        }
+        grid[highestTetroPos++] = new int[10];
+    }
+
+    public void scoreRow() {
+        int count;
+        for (int i = bottomEdge; i >= highestTetroPos; i--) {
+            count = 0;
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] != 0)
+                    count++;
+            }
+            if (count == col) {
+                deleteRow(i);
+                i++;
             }
         }
     }

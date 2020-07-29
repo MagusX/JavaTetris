@@ -95,7 +95,7 @@ public class Tetro {
             moveLeft();
             return 1;
         }
-        if (Board.grid[pos.getY() + posY][right + 1] != 0) {
+        if (right + 1 < Board.rightEdge && Board.grid[pos.getY() + posY][right + 1] != 0) {
             return 1;
         }
         if (right > Board.rightEdge) {
