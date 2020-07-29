@@ -5,7 +5,8 @@ public class Tetro {
     protected Color color;
     protected int size = 3;
     protected int id = 0;
-    public int collideSide = 2;
+    public int collideLeft = 2;
+    public int collideRight = 2;
     public int collideBottom = 2;
 
     public void fall() {
@@ -14,12 +15,12 @@ public class Tetro {
     }
 
     public void moveLeft() {
-        if (collideBottom == 2 && collideSide != -1)
+        if (collideBottom == 2 && collideLeft != -1)
             pos.setX(pos.getX() - 1);
     }
 
     public void moveRight() {
-        if (collideBottom == 2 && collideSide != 1)
+        if (collideBottom == 2 && collideRight != 1)
             pos.setX(pos.getX() + 1);
     }
 
@@ -51,10 +52,10 @@ public class Tetro {
     }
 
     //-1 left, 0 bottom, 1 right, 2 false
-    public int collidedLeft() {
+    private int collidedLeft() {
         int posX = pos.getX();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int j = 0; j < size; j++) {
+            for (int i = 0; i < size; i++) {
                 if (body[i][j] != 0) {
                     if (posX + j < 0) {
                         moveRight();
@@ -63,22 +64,40 @@ public class Tetro {
                     if (posX + j == 0) {
                         return -1;
                     }
+                    if (Board.grid[pos.getY() + i][posX + j] != 0) {
+                        moveRight();
+                        return -1;
+                    }
+                    if (Board.grid[pos.getY() + i][posX + j - 1] != 0) {
+                        return -1;
+                    }
                 }
             }
         }
         return 2;
     }
 
-    public int collidedRight() {
+    private int collidedRight() {
         int posX = pos.getX();
         int maxRight = 0;
+        int posY = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 1; j < size; j++) {
-                if (body[i][j] != 0 && j > maxRight)
+                if (body[i][j] != 0 && j > maxRight) {
                     maxRight = j;
+                    posY = i;
+                }
+
             }
         }
         int right = posX + maxRight;
+        if (Board.grid[pos.getY() + posY][right] != 0) {
+            moveLeft();
+            return 1;
+        }
+        if (Board.grid[pos.getY() + posY][right + 1] != 0) {
+            return 1;
+        }
         if (right > Board.rightEdge) {
             moveLeft();
             return 1;
@@ -88,20 +107,25 @@ public class Tetro {
         return 2;
     }
 
-    public int collidedBottom() {
+    private int collidedBottom() {
+        int posY = pos.getY();
+        if (posY + size < Board.highestTetroPos) return 2;
         for (int i = size - 1; i >= 0; i--) {
             for (int j = 0; j < size; j++) {
-                if (body[i][j] != 0 && pos.getY() + i >= Board.bottomEdge)
-                    return 0;
+                if (body[i][j] != 0) {
+                    if (posY + i >= Board.bottomEdge)
+                        return 0;
+                    if (Board.grid[posY + i + 1][pos.getX() + j] != 0)
+                        return 0;
+                }
             }
         }
         return 2;
     }
 
     public void detectCollision() {
-        int posX = pos.getX();
-        if (posX < 2) collideSide = collidedLeft();
-        else if (posX + size > 7) collideSide = collidedRight();
+        collideLeft = collidedLeft();
+        collideRight = collidedRight();
         collideBottom = collidedBottom();
     }
 
